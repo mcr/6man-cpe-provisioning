@@ -1,0 +1,135 @@
+---
+title: Provisioning of IPv6 CPE devices
+abbrev: CPE-provisioning
+docname: draft-richardson-6man-cpe-provisioning-00
+
+stand_alone: true
+
+ipr: trust200902
+area: Internet
+wg: anima Working Group
+kw: Internet-Draft
+cat: std
+
+coding: us-ascii
+pi:    # can use array (if all yes) or hash here
+  toc: yes
+  sortrefs:   # defaults to yes
+  symrefs: yes
+
+author:
+
+
+- ins: M. Richardson
+  name: Michael Richardson
+  org: Sandelman Software Works
+  email: mcr+ietf@sandelman.ca
+
+normative:
+  BCP14: RFC8174
+  RFC7084:
+
+informative:
+  tr179:
+    title: "TR-187 IPv6 for PPP Broadband Access"
+    url: "https://www.broadband-forum.org/technical/download/TR-187_Issue-2.pdf"
+
+--- abstract
+
+RFC7084 provides a series of IPv6 requirements for Customer Edge Routers.
+It provides a multitude of possible configuration options without
+providing any mechanism by which the ISP side can determine what
+the needs of a given customer is.  This results in the ISP taking
+either too conservative (with a risk of too little resources), or a too
+liberal approach (with a resulting higher operational cost).
+
+This document describes a series of IP6CP and DHCPv6 options that
+allow CPE devices to inform an ISP as to what their current needs
+and capabilities are for IPv6 resources.
+
+--- middle
+
+# Introduction
+
+{{RFC7084}} provides a series of requirements for Customer Edge
+Devices. These are generally referred to as Customer Premises Edge, or
+CPE-devices.
+
+{{tr179}} provides a guide for how to put another of protocols together in
+the PPPoE/DSL space, it does not provide a mechanism by which an ISP can
+determine what the actual requirements for a particular customer are.
+
+The result is that each CPE device has to make a series of requests, at each
+point attempting to acquire a bit more resources.  The ISP has to respond to
+each request in isolation without knowing whether or not the CPE device
+is done, or will come back for additional resources.
+
+There are significant optimizations, including significant security updates,
+that can be made if both parties are aware of the capabilities of the other
+party.  This document details the many options that have come to
+standardization, and explains what an optimal configuration is for a variety
+of different use cases.
+
+# Terminology
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+"SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in {{BCP14}} when, and only when, they
+appear in all capitals, as shown here.
+
+
+# Operational Options
+
+## 
+
+# Operational Use cases
+
+## Single Smartphone or single PC
+
+TBD
+
+## Simple Residential Network
+
+TBD
+
+## Complex Residential Network
+
+TBD
+
+## Single Smartphone with Tethered devices
+
+TBD
+
+## IPv6-only Residential network
+
+TBD
+
+## IPv6-mostly Residential Network with local DNS64 and NAT64
+
+TBD
+
+# Communicating operational requirements
+
+# Privacy Considerations
+
+YYY
+
+# Security Considerations
+
+ZZZ
+
+# IANA Considerations
+
+This document does not yet make any requests for DHCPv6 or IP6CP options,
+but probably will.
+
+# Acknowledgements
+
+Hello.
+
+# Changelog
+
+
+--- back
+

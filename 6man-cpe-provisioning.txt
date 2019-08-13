@@ -1,0 +1,224 @@
+
+
+
+
+anima Working Group                                        M. Richardson
+Internet-Draft                                  Sandelman Software Works
+Intended status: Standards Track                         August 19, 2019
+Expires: February 20, 2020
+
+
+                    Provisioning of IPv6 CPE devices
+               draft-richardson-6man-cpe-provisioning-00
+
+Abstract
+
+   RFC7084 provides a series of IPv6 requirements for Customer Edge
+   Routers.  It provides a multitude of possible configuration options
+   without providing any mechanism by which the ISP side can determine
+   what the needs of a given customer is.  This results in the ISP
+   taking either too conservative (with a risk of too little resources),
+   or a too liberal approach (with a resulting higher operational cost).
+
+   This document describes a series of IP6CP and DHCPv6 options that
+   allow CPE devices to inform an ISP as to what their current needs and
+   capabilities are for IPv6 resources.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on February 20, 2020.
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+
+
+
+Richardson              Expires February 20, 2020               [Page 1]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Operational Options . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Operational Use cases . . . . . . . . . . . . . . . . . . . .   3
+     4.1.  Single Smartphone or single PC  . . . . . . . . . . . . .   3
+     4.2.  Simple Residential Network  . . . . . . . . . . . . . . .   3
+     4.3.  Complex Residential Network . . . . . . . . . . . . . . .   3
+     4.4.  Single Smartphone with Tethered devices . . . . . . . . .   3
+     4.5.  IPv6-only Residential network . . . . . . . . . . . . . .   3
+     4.6.  IPv6-mostly Residential Network with local DNS64 and
+           NAT64 . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   5.  Communicating operational requirements  . . . . . . . . . . .   4
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   4
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   4
+   10. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .   4
+     11.2.  Informative References . . . . . . . . . . . . . . . . .   4
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
+
+1.  Introduction
+
+   [RFC7084] provides a series of requirements for Customer Edge
+   Devices.  These are generally referred to as Customer Premises Edge,
+   or CPE-devices.
+
+   [tr179] provides a guide for how to put another of protocols together
+   in the PPPoE/DSL space, it does not provide a mechanism by which an
+   ISP can determine what the actual requirements for a particular
+   customer are.
+
+   The result is that each CPE device has to make a series of requests,
+   at each point attempting to acquire a bit more resources.  The ISP
+   has to respond to each request in isolation without knowing whether
+   or not the CPE device is done, or will come back for additional
+   resources.
+
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 2]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
+   There are significant optimizations, including significant security
+   updates, that can be made if both parties are aware of the
+   capabilities of the other party.  This document details the many
+   options that have come to standardization, and explains what an
+   optimal configuration is for a variety of different use cases.
+
+2.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   [BCP14] when, and only when, they appear in all capitals, as shown
+   here.
+
+3.  Operational Options
+
+   ##
+
+4.  Operational Use cases
+
+4.1.  Single Smartphone or single PC
+
+   TBD
+
+4.2.  Simple Residential Network
+
+   TBD
+
+4.3.  Complex Residential Network
+
+   TBD
+
+4.4.  Single Smartphone with Tethered devices
+
+   TBD
+
+4.5.  IPv6-only Residential network
+
+   TBD
+
+4.6.  IPv6-mostly Residential Network with local DNS64 and NAT64
+
+   TBD
+
+
+
+
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 3]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
+5.  Communicating operational requirements
+
+6.  Privacy Considerations
+
+   YYY
+
+7.  Security Considerations
+
+   ZZZ
+
+8.  IANA Considerations
+
+   This document does not yet make any requests for DHCPv6 or IP6CP
+   options, but probably will.
+
+9.  Acknowledgements
+
+   Hello.
+
+10.  Changelog
+
+11.  References
+
+11.1.  Normative References
+
+   [BCP14]    Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC7084]  Singh, H., Beebee, W., Donley, C., and B. Stark, "Basic
+              Requirements for IPv6 Customer Edge Routers", RFC 7084,
+              DOI 10.17487/RFC7084, November 2013, <https://www.rfc-
+              editor.org/info/rfc7084>.
+
+11.2.  Informative References
+
+   [tr179]    "TR-187 IPv6 for PPP Broadband Access", n.d..
+
+Author's Address
+
+   Michael Richardson
+   Sandelman Software Works
+
+   Email: mcr+ietf@sandelman.ca
+
+
+
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 4]
