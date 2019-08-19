@@ -28,8 +28,14 @@ author:
 normative:
   BCP14: RFC8174
   RFC7084:
+  RFC6603:
+  RFC7217:
+  RFC6164:
+  RFC4862:
+  RFC8415:
 
 informative:
+  I-D.palet-v6ops-p2p-links:
   tr179:
     title: "TR-187 IPv6 for PPP Broadband Access"
     url: "https://www.broadband-forum.org/technical/download/TR-187_Issue-2.pdf"
@@ -81,9 +87,96 @@ appear in all capitals, as shown here.
 
 # Operational Options
 
-## 
+This section details how IPv6 prefixes are requested and used in
+typical CPE/ISP operations.
+
+## IPv6 /64 for WAN link
+
+In parallel to the historical IPv4 configuration which featured a single
+PC attached to a cable or dialup network, the Customer Internet Connection
+(see {{RFC7084}} figure 1) is usually provided with an IPv6 prefix.
+
+{{RFC7084}} WAN-side requirements W-1, WAA-1, WAA-2, WAA-3, WAA-4, WAA-6,
+and WAA-7 essentially insist that the Customer Internet Connection be
+provisioned with some IPv6 address space, usually a /64.
+
+On older cable systems there may be a multitude of customers on this link,
+and the customers may be able to communicate with each other directly.
+On more modern systems where there is FTTN or FTTH, all traffic is typically
+hairpined up to the ISP, and customers are isolated into seperate L2 domains.
+
+On PPP systems (PPPoE, DSL, LTE, and dialup), each customer has their own PPP
+link as an L2 domain.  Historical IPv4 mechanisms used proxy-ARP to map the
+end users onto a common L2 ethernet segment, but IPv6 provides for a /64 per
+customer.
+
+The /64 is generally a lot of address space. It provides for a CPE
+device to be able to use temporary adresses and other privacy preserving
+mechanism for communication from the CPE device itself.  Many ask why the CPE
+device needs any additional address space, and why can't it just use some
+kind of proxy Neighbor Discovery.  (This document does not address that
+question, which has been rehashed in multiple WG mailing lists already).
+
+A bigger problem with /64 on point to point links is outlined by {{RFC6164}}
+is the ping-pong problem.  {{I-D.palet-v6ops-p2p-links}} section 3.3
+discusses the use of unnumbered (IPv6 Link Local), noting that it is only
+possible when the device can otherwise use DHCPv6-PD ({{RFC8415}}) to get
+address space.
+
+### SLAAC numbering of Customer Internet Connection
+
+The CPE MAY configure an address using either SLAAC {{RFC4862}} or {{RFC7217}}
+mechanisms.  The result is an address for the CPE to use on the Customer
+Internet Connection based upon PIO options in the Router Advertisements.
+
+### DHCPv6 number of Customer Internet Connection
+
+The CPE MAY also make a DHCPv6 request for an address.
+
+## IPv6 /64 for the device {#slash64device}
+
+MUMBLE discusses the use of /64 per host.  In the case where the end
+system is a single PC or Smartphone this policy provides a number of
+advantages when temporary addresses are in use, over use of SLAAC over the
+Customer Internet Connection.
+
+## IPv6 /64 per LAN port
+
+FOOBAZ argues that use of Layer-2 Bridging among home facing CPE ports
+(such as wired, and multiple frequencies of wireless) is undesirable.
+{{RFC7084}} makes provision for this in requirement WPD-2.
+
+## IPv6 /64 available for tethering
+
+While a Smartphone could live with a single /128 address, the arguments of
+{{slash64device}} suggest that it will always have at least a /64.  If that
+/64 is present on the Customer Internet Connection, then it is hard to also
+use that prefix for tethering to another device over WiFi, Bluetooth, or
+Ethernet-over-USB connector.  This is commonly done today in IPv4 with extra
+layer of NAT44.  Another prefix is needed for the Smartphone to allow for
+tethering.
+
+## DHCPv6 Prefix Delegation
+
+{{RFC7084}} in multiple requirements has the CPE device request a
+prefix from the ISP.  This larger prefix is then divided up into multiple /64
+prefixes in order to satisfy some of the address requirements above.
+
+## DHCPv6 Prefix Delegation exclusion
+
+The Customer Internet Connection MAY be numbered with Router Advertisements
+and DHCPv6 allocation from a prefix which is excluded using {{RFC6603}}.
+{{RFC6603}} section 4.1 explains how the Requesting Router can indicate
+support (in DHCPv6) for this option.
+
+If the Customer Internet Connection is numbered only via DHCPv6 (and never
+via Router Advertisement), then it is possible to deploy this to both CPE
+systems that understand this exclusion option, and those that do not.
 
 # Operational Use cases
+
+This section details different usage scenarios, and how each scenario makes
+use of the operational options above.
 
 ## Single Smartphone or single PC
 
