@@ -69,24 +69,32 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Operational Options . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Operational Use cases . . . . . . . . . . . . . . . . . . . .   3
-     4.1.  Single Smartphone or single PC  . . . . . . . . . . . . .   3
-     4.2.  Simple Residential Network  . . . . . . . . . . . . . . .   3
-     4.3.  Complex Residential Network . . . . . . . . . . . . . . .   3
-     4.4.  Single Smartphone with Tethered devices . . . . . . . . .   3
-     4.5.  IPv6-only Residential network . . . . . . . . . . . . . .   3
+     3.1.  IPv6 /64 for WAN link . . . . . . . . . . . . . . . . . .   3
+       3.1.1.  SLAAC numbering of Customer Internet Connection . . .   4
+       3.1.2.  DHCPv6 number of Customer Internet Connection . . . .   4
+     3.2.  IPv6 /64 for the device . . . . . . . . . . . . . . . . .   4
+     3.3.  IPv6 /64 per LAN port . . . . . . . . . . . . . . . . . .   4
+     3.4.  IPv6 /64 available for tethering  . . . . . . . . . . . .   4
+     3.5.  DHCPv6 Prefix Delegation  . . . . . . . . . . . . . . . .   5
+     3.6.  DHCPv6 Prefix Delegation exclusion  . . . . . . . . . . .   5
+   4.  Operational Use cases . . . . . . . . . . . . . . . . . . . .   5
+     4.1.  Single Smartphone or single PC  . . . . . . . . . . . . .   5
+     4.2.  Simple Residential Network  . . . . . . . . . . . . . . .   5
+     4.3.  Complex Residential Network . . . . . . . . . . . . . . .   5
+     4.4.  Single Smartphone with Tethered devices . . . . . . . . .   5
+     4.5.  IPv6-only Residential network . . . . . . . . . . . . . .   5
      4.6.  IPv6-mostly Residential Network with local DNS64 and
-           NAT64 . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   5.  Communicating operational requirements  . . . . . . . . . . .   4
-   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   4
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   4
-   10. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .   4
-     11.2.  Informative References . . . . . . . . . . . . . . . . .   4
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   4
+           NAT64 . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Communicating operational requirements  . . . . . . . . . . .   6
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
+   10. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .   6
+     11.2.  Informative References . . . . . . . . . . . . . . . . .   7
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -99,20 +107,18 @@ Table of Contents
    ISP can determine what the actual requirements for a particular
    customer are.
 
-   The result is that each CPE device has to make a series of requests,
-   at each point attempting to acquire a bit more resources.  The ISP
-   has to respond to each request in isolation without knowing whether
-   or not the CPE device is done, or will come back for additional
-   resources.
-
-
-
 
 
 Richardson              Expires February 20, 2020               [Page 2]
 
 Internet-Draft              CPE-provisioning                 August 2019
 
+
+   The result is that each CPE device has to make a series of requests,
+   at each point attempting to acquire a bit more resources.  The ISP
+   has to respond to each request in isolation without knowing whether
+   or not the CPE device is done, or will come back for additional
+   resources.
 
    There are significant optimizations, including significant security
    updates, that can be made if both parties are aware of the
@@ -130,9 +136,119 @@ Internet-Draft              CPE-provisioning                 August 2019
 
 3.  Operational Options
 
-   ##
+   This section details how IPv6 prefixes are requested and used in
+   typical CPE/ISP operations.
+
+3.1.  IPv6 /64 for WAN link
+
+   In parallel to the historical IPv4 configuration which featured a
+   single PC attached to a cable or dialup network, the Customer
+   Internet Connection (see [RFC7084] figure 1) is usually provided with
+   an IPv6 prefix.
+
+   [RFC7084] WAN-side requirements W-1, WAA-1, WAA-2, WAA-3, WAA-4, WAA-
+   6, and WAA-7 essentially insist that the Customer Internet Connection
+   be provisioned with some IPv6 address space, usually a /64.
+
+   On older cable systems there may be a multitude of customers on this
+   link, and the customers may be able to communicate with each other
+   directly.  On more modern systems where there is FTTN or FTTH, all
+   traffic is typically hairpined up to the ISP, and customers are
+   isolated into seperate L2 domains.
+
+   On PPP systems (PPPoE, DSL, LTE, and dialup), each customer has their
+   own PPP link as an L2 domain.  Historical IPv4 mechanisms used proxy-
+   ARP to map the end users onto a common L2 ethernet segment, but IPv6
+   provides for a /64 per customer.
+
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 3]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
+   The /64 is generally a lot of address space.  It provides for a CPE
+   device to be able to use temporary adresses and other privacy
+   preserving mechanism for communication from the CPE device itself.
+   Many ask why the CPE device needs any additional address space, and
+   why can't it just use some kind of proxy Neighbor Discovery.  (This
+   document does not address that question, which has been rehashed in
+   multiple WG mailing lists already).
+
+   A bigger problem with /64 on point to point links is outlined by
+   [RFC6164] is the ping-pong problem.  [I-D.palet-v6ops-p2p-links]
+   section 3.3 discusses the use of unnumbered (IPv6 Link Local), noting
+   that it is only possible when the device can otherwise use DHCPv6-PD
+   ([RFC8415]) to get address space.
+
+3.1.1.  SLAAC numbering of Customer Internet Connection
+
+   The CPE MAY configure an address using either SLAAC [RFC4862] or
+   [RFC7217] mechanisms.  The result is an address for the CPE to use on
+   the Customer Internet Connection based upon PIO options in the Router
+   Advertisements.
+
+3.1.2.  DHCPv6 number of Customer Internet Connection
+
+   The CPE MAY also make a DHCPv6 request for an address.
+
+3.2.  IPv6 /64 for the device
+
+   MUMBLE discusses the use of /64 per host.  In the case where the end
+   system is a single PC or Smartphone this policy provides a number of
+   advantages when temporary addresses are in use, over use of SLAAC
+   over the Customer Internet Connection.
+
+3.3.  IPv6 /64 per LAN port
+
+   FOOBAZ argues that use of Layer-2 Bridging among home facing CPE
+   ports (such as wired, and multiple frequencies of wireless) is
+   undesirable.  [RFC7084] makes provision for this in requirement WPD-
+   2.
+
+3.4.  IPv6 /64 available for tethering
+
+   While a Smartphone could live with a single /128 address, the
+   arguments of Section 3.2 suggest that it will always have at least a
+   /64.  If that /64 is present on the Customer Internet Connection,
+   then it is hard to also use that prefix for tethering to another
+   device over WiFi, Bluetooth, or Ethernet-over-USB connector.  This is
+   commonly done today in IPv4 with extra layer of NAT44.  Another
+   prefix is needed for the Smartphone to allow for tethering.
+
+
+
+Richardson              Expires February 20, 2020               [Page 4]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
+3.5.  DHCPv6 Prefix Delegation
+
+   [RFC7084] in multiple requirements has the CPE device request a
+   prefix from the ISP.  This larger prefix is then divided up into
+   multiple /64 prefixes in order to satisfy some of the address
+   requirements above.
+
+3.6.  DHCPv6 Prefix Delegation exclusion
+
+   The Customer Internet Connection MAY be numbered with Router
+   Advertisements and DHCPv6 allocation from a prefix which is excluded
+   using [RFC6603].  [RFC6603] section 4.1 explains how the Requesting
+   Router can indicate support (in DHCPv6) for this option.
+
+   If the Customer Internet Connection is numbered only via DHCPv6 (and
+   never via Router Advertisement), then it is possible to deploy this
+   to both CPE systems that understand this exclusion option, and those
+   that do not.
 
 4.  Operational Use cases
+
+   This section details different usage scenarios, and how each scenario
+   makes use of the operational options above.
 
 4.1.  Single Smartphone or single PC
 
@@ -154,9 +270,6 @@ Internet-Draft              CPE-provisioning                 August 2019
 
    TBD
 
-4.6.  IPv6-mostly Residential Network with local DNS64 and NAT64
-
-   TBD
 
 
 
@@ -164,11 +277,14 @@ Internet-Draft              CPE-provisioning                 August 2019
 
 
 
-
-Richardson              Expires February 20, 2020               [Page 3]
+Richardson              Expires February 20, 2020               [Page 5]
 
 Internet-Draft              CPE-provisioning                 August 2019
 
+
+4.6.  IPv6-mostly Residential Network with local DNS64 and NAT64
+
+   TBD
 
 5.  Communicating operational requirements
 
@@ -199,12 +315,51 @@ Internet-Draft              CPE-provisioning                 August 2019
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+   [RFC4862]  Thomson, S., Narten, T., and T. Jinmei, "IPv6 Stateless
+              Address Autoconfiguration", RFC 4862,
+              DOI 10.17487/RFC4862, September 2007, <https://www.rfc-
+              editor.org/info/rfc4862>.
+
+   [RFC6164]  Kohno, M., Nitzan, B., Bush, R., Matsuzaki, Y., Colitti,
+              L., and T. Narten, "Using 127-Bit IPv6 Prefixes on Inter-
+              Router Links", RFC 6164, DOI 10.17487/RFC6164, April 2011,
+              <https://www.rfc-editor.org/info/rfc6164>.
+
+   [RFC6603]  Korhonen, J., Ed., Savolainen, T., Krishnan, S., and O.
+              Troan, "Prefix Exclude Option for DHCPv6-based Prefix
+              Delegation", RFC 6603, DOI 10.17487/RFC6603, May 2012,
+              <https://www.rfc-editor.org/info/rfc6603>.
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 6]
+
+Internet-Draft              CPE-provisioning                 August 2019
+
+
    [RFC7084]  Singh, H., Beebee, W., Donley, C., and B. Stark, "Basic
               Requirements for IPv6 Customer Edge Routers", RFC 7084,
               DOI 10.17487/RFC7084, November 2013, <https://www.rfc-
               editor.org/info/rfc7084>.
 
+   [RFC7217]  Gont, F., "A Method for Generating Semantically Opaque
+              Interface Identifiers with IPv6 Stateless Address
+              Autoconfiguration (SLAAC)", RFC 7217,
+              DOI 10.17487/RFC7217, April 2014, <https://www.rfc-
+              editor.org/info/rfc7217>.
+
+   [RFC8415]  Mrugalski, T., Siodelski, M., Volz, B., Yourtchenko, A.,
+              Richardson, M., Jiang, S., Lemon, T., and T. Winters,
+              "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
+              RFC 8415, DOI 10.17487/RFC8415, November 2018,
+              <https://www.rfc-editor.org/info/rfc8415>.
+
 11.2.  Informative References
+
+   [I-D.palet-v6ops-p2p-links]
+              Palet, J., "IPv6 Point-to-Point Links", draft-palet-v6ops-
+              p2p-links-03 (work in progress), July 2019.
 
    [tr179]    "TR-187 IPv6 for PPP Broadband Access", n.d..
 
@@ -221,4 +376,17 @@ Author's Address
 
 
 
-Richardson              Expires February 20, 2020               [Page 4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson              Expires February 20, 2020               [Page 7]
